@@ -84,7 +84,6 @@ end
 
 def is_available(url)
   get_available_servers.each do |server|
-    p server
     hostname = server['hostname']
     if url.include?(hostname)
       return true
@@ -133,6 +132,8 @@ if __FILE__ == $0
     if not is_available(last_url)
       puts 'Last used TM not available, trying configured alternatives'
       run_backup
+    else
+      puts 'No action required: Last backup successful and TM available'
     end
   end
 end

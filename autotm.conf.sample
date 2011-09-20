@@ -1,0 +1,7 @@
+servers:
+ - hostname: myhomeserver.local
+   username: jdoe
+   password: s3cr3t
+ - hostname: myofficeserver.local
+   username: john_doe
+   password: pa55

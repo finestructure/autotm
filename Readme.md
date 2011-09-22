@@ -41,3 +41,15 @@ This would translate to:
 
 in your config file.
 
+### Logging
+
+In order to monitor what `autotm` is doing, the LaunchDaemon is configured to log to `/var/log/autotm.log`. You can inspect this file through the console confirm everything is working as expected.
+
+### Server Selection Logic
+
+A few notes about how servers are selected:
+
+ - `autotm` looks at your system.log to determine if the last backup failed
+ - if it failed, `autotm` will go through the list of configured servers to look for an alternative
+ - if multiple servers respond to pings, `autotm` will pick the fastest one (your office server may be visible via a presumably slower VPN connection for example but you want to avoid backing up there from home)
+ - if your last backup was successful but the server is not available anymore `autotm` will check for alternatives and pick the fastest one, as described above

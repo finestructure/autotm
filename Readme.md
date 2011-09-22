@@ -14,7 +14,7 @@ Installation
 
     `launchctl load /Library/LaunchDaemons/de.abstracture.autotm.plist`
 
-# Config file
+### Config file
 
 The config file is in yaml format and contains the following keys:
 

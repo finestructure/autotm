@@ -25,7 +25,7 @@ The config file is in yaml format and contains the following keys:
 
 The default for the path is `/Backups`, which is what OSX Lion Server uses as a name for its time machine share. This may vary depending on your setup.
 
-The easiest way to determine your is to grep through your system.log:
+The easiest way to determine your backup configuration is to grep through your system.log:
 
 `grep backupd /var/log/system.log | grep "Mounted network"`
 

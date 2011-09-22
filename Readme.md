@@ -6,7 +6,8 @@ Installation
 
     ```sudo cp autotm /usr/local/bin/
     sudo cp de.abstracture.autotm.plist /Library/LaunchDaemons/ 
-    sudo cp autotm.conf.sample /etc/autotm.conf```
+    sudo cp autotm.conf.sample /etc/autotm.conf
+    ```
 
 - Load the daemon (needs to be run only once):
 

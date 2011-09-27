@@ -1,6 +1,7 @@
 #!/usr/bin/ruby
 
 require 'yaml'
+require 'time'
 
 CONF_FILE = '/etc/autotm.conf'
 
@@ -99,7 +100,7 @@ def schedule_tm_backup(server)
   password = server['password']
   path = server['path'] || '/Backups'
   tm_url = "afp://#{user}:#{password}@#{hostname}#{path}"
-  puts "Backing up to: afp://#{user}@#{hostname}#{path}"
+  puts "#{Time.now}: Backing up to: afp://#{user}@#{hostname}#{path}"
   
   %x[sudo tmutil setdestination #{tm_url}]
   sleep(5)
@@ -116,7 +117,7 @@ def run_backup
     server = available[0]
     schedule_tm_backup(server)
   else
-    puts 'No time machine server found'
+    puts "#{Time.now}: No time machine server found"
   end
 end
 
@@ -126,14 +127,14 @@ if __FILE__ == $0
   
   last_status, last_url = events[-1]
   if last_status == :failure
-    puts 'Last backup failed, trying available servers'
+    puts "#{Time.now}: Last backup failed, trying available servers"
     run_backup
   else # :success
     if not is_available(last_url)
-      puts 'Last used TM not available, trying configured alternatives'
+      puts "#{Time.now}: Last used TM not available, trying configured alternatives"
       run_backup
     else
-      puts 'No action required: Last backup successful and TM available'
+      puts "#{Time.now}: No action required: Last backup successful and TM available"
     end
   end
 end

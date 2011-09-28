@@ -125,6 +125,11 @@ end
 if __FILE__ == $0
   events = get_tm_events
   
+  if events == []
+    puts "#{Time.now}: No backup events found (can happen after syslog roll at midnight)"
+    return
+  end
+  
   last_status, last_url = events[-1]
   if last_status == :failure
     puts "#{Time.now}: Last backup failed, trying available servers"

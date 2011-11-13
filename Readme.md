@@ -4,7 +4,7 @@ Installation
 - Edit `autotm.conf.sample` to match your setup
 - Copy files:
 
-    `sudo cp autotm /usr/local/bin/`
+    `sudo cp autotm.rb /usr/local/bin/autotm`
 
     `sudo cp de.abstracture.autotm.plist /Library/LaunchDaemons/`
     

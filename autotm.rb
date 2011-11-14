@@ -125,17 +125,26 @@ module Autotm
   end
   
   
-  def schedule_tm_backup(server)
-    user = server['username']
-    hostname = server['hostname']
-    password = server['password']
-    path = server['path'] || '/Backups'
-    tm_url = "afp://#{user}:#{password}@#{hostname}#{path}"
-    puts "#{Time.now}: Backing up to: afp://#{user}@#{hostname}#{path}"
-    
-    %x[sudo tmutil setdestination #{tm_url}]
+  def start_backup(tm_dest)
+    %x[sudo tmutil setdestination #{tm_dest}]
     sleep(5)
     %x[tmutil startbackup]
+  end
+  
+  
+  def schedule_tm_backup(dest)
+    if dest['type'] == 'remote'
+      user = dest['username']
+      hostname = dest['hostname']
+      password = dest['password']
+      path = dest['path'] || '/Backups'
+      tm_dest = "afp://#{user}:#{password}@#{hostname}#{path}"
+      puts "#{Time.now}: Backing up to: afp://#{user}@#{hostname}#{path}"
+    else
+      tm_dest = %{"#{dest['volume']}"}
+      puts "#{Time.now}: Backing up to: #{tm_dest}"
+    end    
+    start_backup(tm_dest)
   end
   
   

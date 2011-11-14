@@ -38,10 +38,10 @@ class File
 end
 
 
-$scheduled = nil
+$action = nil
 
-def schedule_tm_backup(server)
-  $scheduled = server
+def start_backup(tm_dest)
+  $action = "sudo tmutil setdestination #{tm_dest}"
 end
 
 
@@ -122,9 +122,21 @@ Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination 
 
 
   def test_05_run_backup
-    $scheduled = nil
+    $action = nil
     run_backup
-    assert_equal(TEST_DIR, $scheduled['volume'])
+    assert_equal(%{sudo tmutil setdestination "/tmp/test dir"}, $action)
+  end
+
+
+  def test_06_schedule_tm_backup
+    $action = nil
+    dest = get_available_destinations()
+    assert_equal('/tmp/test dir', dest[0]['volume'])
+    assert_equal('localhost', dest[1]['hostname'])
+    schedule_tm_backup(dest[0])    
+    assert_equal(%{sudo tmutil setdestination "/tmp/test dir"}, $action)
+    schedule_tm_backup(dest[1])    
+    assert_equal(%{sudo tmutil setdestination afp://jdoe:s3cr3t@localhost/Backups}, $action)
   end
 
 end

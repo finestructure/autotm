@@ -95,10 +95,14 @@ module Autotm
   
   
   def is_available(url)
-    get_available_servers.each do |server|
-      hostname = server['hostname']
-      if url.include?(hostname)
-        return true
+    if url.start_with?('/')
+      return File.directory?(url)
+    else
+      get_available_servers.each do |server|
+        hostname = server['hostname']
+        if url.include?(hostname)
+          return true
+        end
       end
     end
     return false

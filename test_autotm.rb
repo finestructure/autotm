@@ -1,7 +1,10 @@
 require 'test/unit'
+require 'fileutils'
 require 'autotm'
 
 include Autotm
+
+TEST_DIR = '/tmp/test dir'
 
 def get_conf
   {"servers"=>[
@@ -31,6 +34,16 @@ end
 
 
 class TestAutotm < Test::Unit::TestCase
+
+  def setup
+    FileUtils.mkdir(TEST_DIR)
+  end
+
+
+  def teardown
+    FileUtils.rmdir(TEST_DIR)
+  end
+  
 
   def test_01_ping
     res = ping('localhost')
@@ -87,6 +100,10 @@ Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination 
     url = 'afp://jdoe@localhost/Backups'
     assert(is_available(url))
     url = 'afp://jdoe@badhost/Backups'
+    assert(! is_available(url))
+    url = TEST_DIR
+    assert(is_available(url))
+    url = '/no/such/directory'
     assert(! is_available(url))
   end
 

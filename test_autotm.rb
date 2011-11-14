@@ -49,4 +49,12 @@ Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination 
     assert_equal([:success, "afp://jdoe@localhost/Backups"], evts[1])
   end
 
+
+  def test_04_is_available
+    url = 'afp://jdoe@localhost/Backups'
+    assert(is_available(url))
+    url = 'afp://jdoe@badhost/Backups'
+    assert(! is_available(url))
+  end
+
 end

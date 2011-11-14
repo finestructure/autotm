@@ -1,7 +1,11 @@
-servers:
- - hostname: myhomeserver.local
+destinations:
+ - type: remote
+   hostname: myhomeserver.local
    username: jdoe
    password: s3cr3t
- - hostname: myofficeserver.local
+ - type: remote
+   hostname: myofficeserver.local
    username: john_doe
-   password: pa55
+   password: pa55 
+ - type: local
+   volume: /Volumes/Time Machine

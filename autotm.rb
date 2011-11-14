@@ -33,7 +33,7 @@ module Autotm
   
   
   def ping(hostname)
-    res = %x[ping -q -c 10 -t 1 #{hostname}]
+    res = %x[ping -q -c 10 -t 1 #{hostname} 2>&1]
     if $?.exitstatus == 0
       res.each do |line|
         if line =~ /^round-trip min\/avg\/max\/stddev = ([\d\.]+)/
@@ -48,18 +48,26 @@ module Autotm
   
   def get_available_destinations
     available = []
-    destinations = get_conf['servers']
+    destinations = get_conf['destinations']
     
     destinations.each do |dest|
-      hostname = dest['hostname']
-      time = ping(hostname)
-      if time > 0
-        dest['ping'] = time
-        available << dest
+      if dest['type'] == 'remote'
+        hostname = dest['hostname']
+        time = ping(hostname)
+        if time > 0
+          dest['priority'] = time
+          available << dest
+        end
+      else
+        if File.directory?(dest['volume'])
+          # give local destinations priority 0 so they get chosen over network
+          # destinations
+          dest['priority'] = 0
+          available << dest
+        end
       end
     end
-    
-    available = available.sort {|a,b| a['ping'] <=> b['ping']}
+    available = available.sort {|a,b| a['priority'] <=> b['priority']}
   end
   
   
@@ -95,13 +103,21 @@ module Autotm
   
   
   def is_available(url)
+    # check if url is available
     if url.start_with?('/')
+      # shortcut: just check for the path if the url starts with a "/"
       return File.directory?(url)
     else
+      # otherwise ping all configured servers and check if the url includes
+      # one of the available server names
+      # doing it this way rather than parsing the server name from the url and
+      # pinging that avoids the whole parsing hassle
       get_available_destinations.each do |dest|
-        hostname = dest['hostname']
-        if url.include?(hostname)
-          return true
+        if dest['type'] == 'remote'
+          hostname = dest['hostname']
+          if url.include?(hostname)
+            return true
+          end
         end
       end
     end

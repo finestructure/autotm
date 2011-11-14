@@ -7,11 +7,23 @@ include Autotm
 TEST_DIR = '/tmp/test dir'
 
 def get_conf
-  {"servers"=>[
-    {"username"=>"jdoe", "hostname"=>"localhost", "password"=>"s3cr3t"},
-    {"username"=>"jdoe", "hostname"=>"www.google.com", "password"=>"s3cr3t"}
-    ]
-  }
+  YAML.load(%{
+destinations:
+ - type: remote
+   hostname: localhost
+   username: jdoe
+   password: s3cr3t
+ - type: remote
+   hostname: www.google.com
+   username: john_doe
+   password: pa55 
+ - type: remote
+   hostname: does.not.exist
+   username: john_doe
+   password: pa55 
+ - type: local
+   volume: /tmp/test dir
+   })
 end
 
 
@@ -53,10 +65,11 @@ class TestAutotm < Test::Unit::TestCase
 
   def test_02_get_available_destinations
     dest = get_available_destinations()
-    assert_equal(2, dest.size)
+    assert_equal(3, dest.size)
     # localhost should always be quicker than google.com
-    assert_equal('localhost', dest[0]['hostname'])
-    assert_equal('www.google.com', dest[1]['hostname'])
+    assert_equal('/tmp/test dir', dest[0]['volume'])
+    assert_equal('localhost', dest[1]['hostname'])
+    assert_equal('www.google.com', dest[2]['hostname'])
   end
 
 
@@ -111,7 +124,7 @@ Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination 
   def test_05_run_backup
     $scheduled = nil
     run_backup
-    assert_equal('localhost', $scheduled['hostname'])
+    assert_equal(TEST_DIR, $scheduled['volume'])
   end
 
 end

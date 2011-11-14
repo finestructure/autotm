@@ -23,6 +23,13 @@ class File
 end
 
 
+$scheduled = nil
+
+def schedule_tm_backup(server)
+  $scheduled = server
+end
+
+
 class TestAutotm < Test::Unit::TestCase
 
   def test_01_ping
@@ -55,6 +62,13 @@ Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination 
     assert(is_available(url))
     url = 'afp://jdoe@badhost/Backups'
     assert(! is_available(url))
+  end
+
+
+  def test_05_run_backup
+    $scheduled = nil
+    run_backup
+    assert_equal('localhost', $scheduled['hostname'])
   end
 
 end

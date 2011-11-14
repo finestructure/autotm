@@ -82,6 +82,11 @@ module Autotm
         if line =~ /Backup failed with error: (\d+)/
           events << [:failure, nil]
         end
+        
+        if line =~ /Backing up to: (.+)\/Backups.backupd/
+          disk = $1
+          events << [:success , "#{disk}"]
+        end
       end
     end
       

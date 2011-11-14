@@ -78,6 +78,10 @@ module Autotm
           url = $1
           events << [:success, "#{url}"]
         end
+        
+        if line =~ /Backup failed with error: (\d+)/
+          events << [:failure, nil]
+        end
       end
     end
       
@@ -124,6 +128,7 @@ module Autotm
   end
 
 end # module
+
 
 if __FILE__ == $0
   include Autotm

@@ -51,12 +51,12 @@ class TestAutotm < Test::Unit::TestCase
   end
 
 
-  def test_02_available_servers
-    servers = get_available_servers()
-    assert_equal(2, servers.size)
+  def test_02_get_available_destinations
+    dest = get_available_destinations()
+    assert_equal(2, dest.size)
     # localhost should always be quicker than google.com
-    assert_equal('localhost', servers[0]['hostname'])
-    assert_equal('www.google.com', servers[1]['hostname'])
+    assert_equal('localhost', dest[0]['hostname'])
+    assert_equal('www.google.com', dest[1]['hostname'])
   end
 
 

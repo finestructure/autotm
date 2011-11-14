@@ -46,16 +46,16 @@ module Autotm
   end
   
   
-  def get_available_servers
+  def get_available_destinations
     available = []
-    servers = get_conf['servers']
+    destinations = get_conf['servers']
     
-    servers.each do |server|
-      hostname = server['hostname']
+    destinations.each do |dest|
+      hostname = dest['hostname']
       time = ping(hostname)
       if time > 0
-        server['ping'] = time
-        available << server
+        dest['ping'] = time
+        available << dest
       end
     end
     
@@ -98,8 +98,8 @@ module Autotm
     if url.start_with?('/')
       return File.directory?(url)
     else
-      get_available_servers.each do |server|
-        hostname = server['hostname']
+      get_available_destinations.each do |dest|
+        hostname = dest['hostname']
         if url.include?(hostname)
           return true
         end
@@ -124,13 +124,13 @@ module Autotm
   
   
   def run_backup
-    available = get_available_servers
+    available = get_available_destinations
     
     if available.size > 0
       # servers are ordered by ping time, take fastest one
       # (prevents backing up to alternatives available via WAN)
-      server = available[0]
-      schedule_tm_backup(server)
+      dest = available[0]
+      schedule_tm_backup(dest)
     else
       puts "#{Time.now}: No time machine server found"
     end

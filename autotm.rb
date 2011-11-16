@@ -49,6 +49,10 @@ module Autotm
   def get_available_destinations
     available = []
     destinations = get_conf['destinations']
+    if destinations == nil
+      puts "#{Time.now}: ERROR: No destinations defined in conf file. Exiting."
+      exit!(-1)
+    end
     
     destinations.each do |dest|
       if dest['type'] == 'remote'

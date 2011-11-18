@@ -79,25 +79,39 @@ module Autotm
   def get_tm_events
     events = []
     
+    network_connection_failed = \
+      /NAConnectToServerSync failed with error: 64 for url: (\S+)/
+    mounted_network_destination = \
+      /Mounted network destination at mountpoint: \S+ using URL: (\S+)/
+    backup_failed = /Backup failed with error: (\d+)/
+    backing_up_to_dir = /Backing up to: (.+)\/Backups.backupd/
+    
+    last_match = nil
+    
     File.read('/var/log/system.log').each do |line|
       if line =~ /com.apple.backupd/
-        if line =~ /NAConnectToServerSync failed with error: 64 for url: (\S+)/
+        if line =~ network_connection_failed
           url = $1
           events << [:failure, "#{url}"]
+          last_match = line
         end
         
-        if line =~ /Mounted network destination at mountpoint: \S+ using URL: (\S+)/
+        if line =~ mounted_network_destination
           url = $1
           events << [:success, "#{url}"]
+          last_match = line
         end
         
-        if line =~ /Backup failed with error: (\d+)/
+        if line =~ backup_failed
           events << [:failure, nil]
+          last_match = line
         end
         
-        if line =~ /Backing up to: (.+)\/Backups.backupd/
+        if line =~ backing_up_to_dir \
+            and not last_match =~ mounted_network_destination
           disk = $1
           events << [:success , "#{disk}"]
+          last_match = line
         end
       end
     end

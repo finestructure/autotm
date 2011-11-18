@@ -33,7 +33,7 @@ module Autotm
   
   
   def ping(hostname)
-    res = %x[ping -q -c 10 -t 1 #{hostname} 2>&1]
+    res = %x[ping -q -c 1 #{hostname} 2>&1]
     if $?.exitstatus == 0
       res.each do |line|
         if line =~ /^round-trip min\/avg\/max\/stddev = ([\d\.]+)/

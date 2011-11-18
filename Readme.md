@@ -14,7 +14,7 @@ Installation
 
 - Load the daemon (needs to be run only once):
 
-    `launchctl load /Library/LaunchDaemons/de.abstracture.autotm.plist`
+    `sudo launchctl load /Library/LaunchDaemons/de.abstracture.autotm.plist`
 
 ### Config file
 

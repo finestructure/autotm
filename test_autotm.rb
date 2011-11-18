@@ -73,13 +73,42 @@ class TestAutotm < Test::Unit::TestCase
   end
 
 
-  def test_03_tm_events
+  def test_03_tm_events_remote_failure
     File.set_log(%{Nov 13 12:10:02 Localhost com.apple.backupd[29592]: NAConnectToServerSync failed with error: 64 for url: afp://jdoe@localhost/Backups
 Nov 13 18:56:46 Localhost com.apple.backupd[30921]: Mounted network destination at mountpoint: /Volumes/Backups using URL: afp://jdoe@localhost/Backups})
     evts = get_tm_events
     assert_equal(2, evts.size)
     assert_equal([:failure, "afp://jdoe@localhost/Backups"], evts[0])
     assert_equal([:success, "afp://jdoe@localhost/Backups"], evts[1])
+  end
+
+
+  def test_03_tm_events_remote_success
+    File.set_log(%{Nov 18 10:09:37 thebe com.apple.backupd[9232]: Starting standard backup
+Nov 18 10:09:37 thebe com.apple.backupd[9232]: Attempting to mount network destination URL: afp://jdoe@test.local/Backups
+Nov 18 10:09:37 thebe com.apple.backupd[9232]: Mounted network destination at mountpoint: /Volumes/Backups using URL: afp://jdoe@test.local/Backups
+Nov 18 10:09:58 thebe com.apple.backupd[9232]: Disk image /Volumes/Backups/Thebe.sparsebundle mounted at: /Volumes/Time Machine Backups
+Nov 18 10:09:58 thebe com.apple.backupd[9232]: Backing up to: /Volumes/Time Machine Backups/Backups.backupdb
+Nov 18 10:10:06 thebe com.apple.backupd[9232]: 1.53 GB required (including padding), 598.36 GB available
+Nov 18 10:10:16 thebe com.apple.backupd[9232]: Copied 2257 files (2.0 MB) from volume ThebeBoot.
+Nov 18 10:10:18 thebe com.apple.backupd[9232]: Copied 2263 files (2.0 MB) from volume ThebeData.
+Nov 18 10:10:18 thebe com.apple.backupd[9232]: 1.53 GB required (including padding), 598.36 GB available
+Nov 18 10:10:26 thebe com.apple.backupd[9232]: Copied 1635 files (98 bytes) from volume ThebeBoot.
+Nov 18 10:10:27 thebe com.apple.backupd[9232]: Copied 1641 files (98 bytes) from volume ThebeData.
+Nov 18 10:10:30 thebe com.apple.backupd[9232]: Starting post-backup thinning
+Nov 18 10:10:37 thebe com.apple.backupd[9232]: Deleted /Volumes/Time Machine Backups/Backups.backupdb/Thebe/2011-11-14-184109 (24.3 MB)
+Nov 18 10:10:42 thebe com.apple.backupd[9232]: Deleted /Volumes/Time Machine Backups/Backups.backupdb/Thebe/2011-11-14-144055 (12.1 MB)
+Nov 18 10:10:57 thebe com.apple.backupd[9232]: Deleted /Volumes/Time Machine Backups/Backups.backupdb/Thebe/2011-11-14-134153 (28.7 MB)
+Nov 18 10:11:05 thebe com.apple.backupd[9232]: Deleted /Volumes/Time Machine Backups/Backups.backupdb/Thebe/2011-11-14-124059 (13.6 MB)
+Nov 18 10:11:12 thebe com.apple.backupd[9232]: Deleted /Volumes/Time Machine Backups/Backups.backupdb/Thebe/2011-11-14-114105 (19.5 MB)
+Nov 18 10:11:12 thebe com.apple.backupd[9232]: Post-back up thinning complete: 5 expired backups removed
+Nov 18 10:11:12 thebe com.apple.backupd[9232]: Backup completed successfully.
+Nov 18 10:11:14 thebe com.apple.backupd[9232]: Ejected Time Machine disk image.
+Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volume.
+})
+    evts = get_tm_events
+    assert_equal(1, evts.size)
+    assert_equal([:success, "afp://jdoe@test.local/Backups"], evts[0])
   end
 
 

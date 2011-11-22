@@ -8,17 +8,7 @@ module Autotm
   CONF_FILE = '/etc/autotm.conf'
   
   def get_conf
-    ## conf file format:
-    # servers:
-    #  - hostname: myhost.local
-    #    username: myusername
-    #    password: mypassword
-    # -----------------------
-    # optionally add (defaults to /Backup):
-    #    path: /mypath
-    # -----------------------
-    # Entries will be assembled to the following backup url:
-    #  "afp://#{user}:#{password}@#{hostname}#{path}"
+    # conf file format: see autotm.conf.sample
   
     conf_file = File.expand_path(CONF_FILE)
     

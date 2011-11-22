@@ -97,11 +97,12 @@ module Autotm
           last_match = line
         end
         
-        if line =~ backing_up_to_dir \
-            and not last_match =~ mounted_network_destination
+        if line =~ backing_up_to_dir
           disk = $1
-          events << [:success , "#{disk}"]
-          last_match = line
+          if not last_match =~ mounted_network_destination
+            events << [:success , "#{disk}"]
+            last_match = line
+          end
         end
       end
     end

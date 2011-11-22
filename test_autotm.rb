@@ -138,6 +138,35 @@ Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volu
   end
 
 
+  def test_03_tm_events_local_disk_success_2
+    File.set_log(%{22/11/2011 10:39:20.766 com.apple.backupd: Starting standard backup
+22/11/2011 10:39:20.821 com.apple.backupd: Backing up to: /Volumes/Time Machine/Backups.backupdb
+22/11/2011 10:39:22.249 com.apple.backupd: 3.15 GB required (including padding), 110.02 GB available
+22/11/2011 10:39:27.398 com.apple.backupd: Copied 969 files (1.3 MB) from volume osprey HD.
+22/11/2011 10:39:27.499 com.apple.backupd: 3.15 GB required (including padding), 110.02 GB available
+22/11/2011 10:39:28.083 com.apple.backupd: Copied 90 files (33 bytes) from volume osprey HD.
+22/11/2011 10:39:28.734 com.apple.backupd: Starting post-backup thinning
+22/11/2011 10:39:28.734 com.apple.backupd: No post-back up thinning needed: no expired backups exist
+22/11/2011 10:39:28.907 com.apple.backupd: Backup completed successfully.
+22/11/2011 11:02:42.524 com.apple.backupd: Starting standard backup
+22/11/2011 11:02:42.576 com.apple.backupd: Backing up to: /Volumes/Time Machine/Backups.backupdb
+22/11/2011 11:02:44.157 com.apple.backupd: 3.15 GB required (including padding), 110.02 GB available
+22/11/2011 11:02:53.649 com.apple.backupd: Copied 2075 files (3.1 MB) from volume osprey HD.
+22/11/2011 11:02:53.747 com.apple.backupd: 3.15 GB required (including padding), 110.02 GB available
+22/11/2011 11:02:54.253 com.apple.backupd: Copied 90 files (33 bytes) from volume osprey HD.
+22/11/2011 11:02:54.916 com.apple.backupd: Starting post-backup thinning
+22/11/2011 11:03:00.945 com.apple.backupd: Deleted /Volumes/Time Machine/Backups.backupdb/Osprey/2011-11-21-104418 (4.4 MB)
+22/11/2011 11:03:06.384 com.apple.backupd: Deleted /Volumes/Time Machine/Backups.backupdb/Osprey/2011-11-21-104035 (46.4 MB)
+22/11/2011 11:03:06.384 com.apple.backupd: Post-back up thinning complete: 2 expired backups removed
+22/11/2011 11:03:06.589 com.apple.backupd: Backup completed successfully.
+.})
+    evts = get_tm_events
+    assert_equal(2, evts.size)
+    assert_equal([:success, "/Volumes/Time Machine"], evts[0])
+    assert_equal([:success, "/Volumes/Time Machine"], evts[1])
+  end
+
+
   def test_04_is_available
     url = 'afp://jdoe@localhost/Backups'
     assert(is_available(url))
@@ -167,5 +196,7 @@ Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volu
     schedule_tm_backup(dest[1])    
     assert_equal(%{sudo tmutil setdestination afp://jdoe:s3cr3t@localhost/Backups}, $action)
   end
+
+
 
 end

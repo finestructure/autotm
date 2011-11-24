@@ -1,5 +1,4 @@
-Installation
-------------
+## Installation
 
 - Edit `autotm.conf.sample` to match your setup
 - Copy files:
@@ -16,7 +15,7 @@ Installation
 
     `sudo launchctl load /Library/LaunchDaemons/de.abstracture.autotm.plist`
 
-### Config file
+## Config file
 
 The config file is in yaml format and contains configurations for available destinations using the following keys:
 
@@ -52,7 +51,13 @@ This would translate to:
 
 in your config file (where path is optional).
 
-### Logging
+### Time Capsule / Bonjour Names
+
+It is possible (most likely in the case of Time Capsule backup destinations) that the URL you grep from the log file reads like
+
+### Escaping
+
+## Logging
 
 In order to monitor what `autotm` is doing, the LaunchDaemon is configured to log to `/var/log/autotm.log`. You can inspect this file through the console to confirm everything is working as expected.
 

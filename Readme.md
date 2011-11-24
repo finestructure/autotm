@@ -36,11 +36,15 @@ The default for the optional remote path is `/Backups`, which is what OSX Lion S
 
 The easiest way to determine your backup configuration for remote backups is to grep through your system.log:
 
-`grep backupd /var/log/system.log | grep "Mounted network"`
+```
+grep backupd /var/log/system.log | grep "Mounted network"
+```
 
 This will show you the used URL:
 
-`Sep 20 02:16:14 Thebe com.apple.backupd[92971]: Mounted network destination at mountpoint: /Volumes/Backups using URL: afp://jdoe@mymac.local/Backups`
+```
+Sep 20 02:16:14 Thebe com.apple.backupd[92971]: Mounted network destination at mountpoint: /Volumes/Backups using URL: afp://jdoe@mymac.local/Backups
+```
 
 This would translate to:
 
@@ -55,11 +59,13 @@ in your config file (where path is optional).
 
 It is possible (most likely in the case of backup disks attached to AirPort base stations) that the URL you grep from the log file looks like:
 
-`21/11/2011 23:01:41.913 com.apple.backupd: Mounted network destination at mountpoint: /Volumes/Western Digital 2Tb using URL: afp://dan@AirPort._afpovertcp._tcp.local/Western%20Digital%202Tb`
+```
+21/11/2011 23:01:41.913 com.apple.backupd: Mounted network destination at mountpoint: /Volumes/Western Digital 2Tb using URL: afp://dan@AirPort._afpovertcp._tcp.local/Western%20Digital%202Tb
+```
 
 In this case strip out the `_afpovertcp._tcp` part and simple enter `AirPort.local` as the server name. As the path, if it contains spaces, both `Western%20Digital%202Tb` and `Western\ Digital\ 2Tb` should work.
 
-### Escaping
+### URL Escaping
 
 If you are configuring autotm for local disks, no escaping of special characters should be required. In the case of remote destinations, the backup destination is specified by a URL and these have certain rules for escaping certain characters (see for example http://en.wikipedia.org/wiki/Percent-encoding).
 

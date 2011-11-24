@@ -51,11 +51,19 @@ This would translate to:
 
 in your config file (where path is optional).
 
-### Time Capsule / Bonjour Names
+### Bonjour Names
 
-It is possible (most likely in the case of Time Capsule backup destinations) that the URL you grep from the log file reads like
+It is possible (most likely in the case of backup disks attached to AirPort base stations) that the URL you grep from the log file looks like:
+
+`21/11/2011 23:01:41.913 com.apple.backupd: Mounted network destination at mountpoint: /Volumes/Western Digital 2Tb using URL: afp://dan@AirPort._afpovertcp._tcp.local/Western%20Digital%202Tb`
+
+In this case strip out the `_afpovertcp._tcp` part and simple enter `AirPort.local` as the server name. As the path, if it contains spaces, both `Western%20Digital%202Tb` and `Western\ Digital\ 2Tb` should work.
 
 ### Escaping
+
+If you are configuring autotm for local disks, no escaping of special characters should be required. In the case of remote destinations, the backup destination is specified by a URL and these have certain rules for escaping certain characters (see for example http://en.wikipedia.org/wiki/Percent-encoding).
+
+This is true for all parts of the URL, most notably the password, which is sent as part of the URL but not printed to the autotm log file. If you are using any special characters, use the percent escape codes or prefix the character with a backslash (\).
 
 ## Logging
 

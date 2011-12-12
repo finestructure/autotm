@@ -170,6 +170,14 @@ module Autotm
     end
   end
 
+
+  def requires_ac_power?
+    plist = '/Library/Preferences/com.apple.TimeMachine'
+    res = %x[defaults read #{plist} RequiresACPower 2>&1]
+    return Integer(res) == 1
+  end
+
+
 end # module
 
 

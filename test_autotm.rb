@@ -198,5 +198,12 @@ Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volu
   end
 
 
+  def test_07_requires_ac_power
+    assert(requires_ac_power? == false,
+      "Test assumes 'RequiresACPower' in com.apple.TimeMachine.plist "\
+      "expected to be set to false. Confirm that this is indeed your setting "\
+      "or adapt test expectation accordingly.")
+  end
+
 
 end

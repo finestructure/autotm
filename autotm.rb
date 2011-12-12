@@ -136,8 +136,13 @@ module Autotm
   
   def start_backup(tm_dest)
     %x[sudo tmutil setdestination #{tm_dest}]
-    sleep(5)
-    %x[tmutil startbackup]
+    if requires_ac_power? and not on_ac_power?
+      puts "#{Time.now}: Destination set but backup deferred until back on "\
+        "AC power as configured in TM settings."
+    else
+      sleep(5)
+      %x[tmutil startbackup]
+    end
   end
   
   
@@ -148,10 +153,10 @@ module Autotm
       password = dest['password']
       path = dest['path'] || '/Backups'
       tm_dest = "afp://#{user}:#{password}@#{hostname}#{path}"
-      puts "#{Time.now}: Backing up to: afp://#{user}@#{hostname}#{path}"
+      puts "#{Time.now}: Destination: afp://#{user}@#{hostname}#{path}"
     else
       tm_dest = %{"#{dest['volume']}"}
-      puts "#{Time.now}: Backing up to: #{tm_dest}"
+      puts "#{Time.now}: Destination: #{tm_dest}"
     end    
     start_backup(tm_dest)
   end

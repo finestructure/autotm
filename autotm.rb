@@ -178,6 +178,22 @@ module Autotm
   end
 
 
+  def on_ac_power?
+    res = %x[pmset -g batt 2>&1]
+    res.each do |line|
+      # looking for strings in output -- works on localised systems
+      # (tested: it is still in English even on a German language 
+      # system)
+      if line =~ /'AC Power'/
+        return true
+      end
+      if line =~/'Battery Power'/
+        return false
+      end
+    end
+  end
+
+
 end # module
 
 

@@ -206,4 +206,9 @@ Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volu
   end
 
 
+  def test_08_on_ac_power
+    assert(on_ac_power?, "Test assumes your machine to run on AC power.")
+  end
+
+
 end

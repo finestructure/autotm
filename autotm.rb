@@ -134,6 +134,19 @@ module Autotm
   end
   
   
+  def is_preferred(url)
+    # check if a given url is the destination with the highest priority (first
+    # in list returned by get_available_destinations)
+    top_priority = get_available_destinations[0]
+    if url.start_with?('/') # url is a local destination
+      return top_priority['type'] == 'local' && \
+        top_priority['volume'].chomp('/') == url.chomp('/')
+    else # url is a remote destination
+      return top_priority['type'] == 'remote' && url.include?(top_priority['hostname'])
+    end
+  end
+  
+  
   def start_backup(tm_dest)
     %x[sudo tmutil setdestination #{tm_dest}]
     if requires_ac_power? and not on_ac_power?
@@ -221,7 +234,12 @@ if __FILE__ == $0
       puts "#{Time.now}: Last used TM not available, trying configured alternatives"
       run_backup
     else
-      puts "#{Time.now}: No action required: Last backup successful and TM available"
+      if is_preferred(last_url)
+        puts "#{Time.now}: No action required: Last backup successful, TM available and preferred"
+      else
+        puts "#{Time.now}: Last backup successful, but different, preferred TM available now"
+        run_backup
+      end
     end
   end
 end

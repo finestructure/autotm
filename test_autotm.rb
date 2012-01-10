@@ -211,4 +211,16 @@ Nov 18 10:11:15 thebe com.apple.backupd[9232]: Ejected Time Machine network volu
   end
 
 
+  def test_09_is_preferred
+    url = 'afp://jdoe@localhost/Backups'
+    assert(! is_preferred(url))
+    url = 'afp://jdoe@badhost/Backups'
+    assert(! is_preferred(url))
+    url = TEST_DIR
+    assert(is_preferred(url))
+    url = '/no/such/directory'
+    assert(! is_preferred(url))
+  end
+
+
 end

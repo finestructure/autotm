@@ -1,3 +1,7 @@
+## Description
+
+`autotm` is a system service (daemon) that manages multiple time machine backup destinations for you in a tranparent way. If you move between different locations where you want to maintain separate time machine backups, `autotm` is for you. I've written `autotm` for my own use and have been runing it since the first release on my MacBook.
+
 ## Installation
 
 - Edit `autotm.conf.sample` to match your setup
@@ -30,7 +34,7 @@ The sample file should hopefully be self-explanatory with respect to file format
 
 Some notes regarding actual values:
 
-Local destinations (essentially usb or firewire disks) only need one key: the path to the volume. This is typically "/Volume/<Volume Name>" where <Volume Name> is the volume's name as shown in the Finder. Note that you don't need to quote the name should it contain blanks. It will be handled automatically.
+Local destinations (essentially usb or firewire disks) only need one key: the path to the volume. This is typically "/Volume/\<Volume Name\>" where \<Volume Name\> is the volume's name as shown in the Finder. Note that you don't need to quote the name should it contain blanks. It will be handled automatically.
 
 The default for the optional remote path is `/Backups`, which is what OSX Lion Server uses as a name for its time machine share. This may vary depending on your setup.
 
